@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import taskRoutes from './routes/tasks.routes';
 import agentRoutes from './routes/agent.routes';
@@ -7,6 +8,32 @@ import agentRoutes from './routes/agent.routes';
 dotenv.config();
 
 const app = express();
+
+// ─── CORS Configuration ───────────────────────────────────────
+
+const allowedOrigins =
+  process.env.CORS_ORIGIN?.split(',') || [];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+
+      // allow Postman / mobile apps / server requests
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
+);
+
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10kb' }));

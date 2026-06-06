@@ -143,7 +143,7 @@ const runAgentLoop = async (
   userId: string,
 ): Promise<{ result: string; toolCalls: ToolCall[] }> => {
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: process.env.GEMINI_API_MODEL! ,
     tools,
     systemInstruction: `You are AgentFlow, an AI that manages tasks for users.
 Use the available tools to create, update, fetch, and check tasks.
